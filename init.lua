@@ -27,6 +27,8 @@ vim.o.guicursor = ''
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv") -- move the selected lines up/down
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
+vim.keymap.set('n', '<leader>x', ':clo<CR>') --close the split/buffer
+
 vim.keymap.set('n', '<C-y>', '<C-^>') --go back to the file you were in
 
 -- Enable mouse mode, can be useful for resizing splits for example!
@@ -43,7 +45,7 @@ end)
 -- Enable break indent
 vim.o.breakindent = true
 
--- Save undo history
+-- Save undo history (undotree needs this set to true)
 vim.o.undofile = true
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
@@ -222,6 +224,16 @@ require('lazy').setup({
     event = 'VeryLazy',
   },
 
+  {
+    'mbbill/undotree',
+    keys = {
+      { '<leader>ut', vim.cmd.UndotreeToggle, desc = 'Toggle Undotree' },
+    },
+    config = function()
+      vim.g.undotree_SetFocusWhenToggle = 1
+    end,
+  },
+
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -398,6 +410,14 @@ require('lazy').setup({
             mode = mode or 'n'
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
+
+          --add all missing imports in normal mode
+          vim.keymap.set('n', '<leader>ai', function()
+            vim.lsp.buf.code_action {
+              context = { only = { 'source.organizeImports' } },
+              apply = true,
+            }
+          end, { buffer = bufnr, desc = '[A]dd [I]mports' })
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
