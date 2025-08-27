@@ -27,6 +27,9 @@ vim.o.guicursor = ''
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv") -- move the selected lines up/down
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
+-- Replace word under cursor in the whole file
+vim.keymap.set('n', '<leader>r', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>]], { desc = 'Substitute word under cursor' })
+
 vim.keymap.set('n', '<leader>x', ':clo<CR>') --close the split/buffer
 
 vim.keymap.set('n', '<C-y>', '<C-^>') --go back to the file you were in
@@ -80,7 +83,7 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.o.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.o.cursorline = true
+vim.o.cursorline = false
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
@@ -309,7 +312,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>sa', builtin.resume, { desc = '[S]earch [A]gain' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
@@ -656,7 +659,10 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettier' },
+        typescript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        typescriptreact = { 'prettier' },
       },
     },
   },
@@ -760,29 +766,42 @@ require('lazy').setup({
     },
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  {
     'vague2k/vague.nvim',
+    name = 'vague',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('vague').setup {
+        disable_background = true, -- 🌿 makes background transparent
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
       }
 
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'vague'
 
-      function ColorPencils()
+      -- Extra function to make sure floats and other UI parts are transparent
+      local function ColorPencils()
+        -- General UI
         vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+        vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'none' })
         vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+        vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'none' })
+        vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'none' })
+
+        -- Telescope
+        vim.api.nvim_set_hl(0, 'TelescopeNormal', { bg = 'none' })
+        vim.api.nvim_set_hl(0, 'TelescopeBorder', { bg = 'none' })
+        vim.api.nvim_set_hl(0, 'TelescopePromptNormal', { bg = 'none' })
+        vim.api.nvim_set_hl(0, 'TelescopePromptBorder', { bg = 'none' })
+        vim.api.nvim_set_hl(0, 'TelescopeResultsNormal', { bg = 'none' })
+        vim.api.nvim_set_hl(0, 'TelescopeResultsBorder', { bg = 'none' })
+        vim.api.nvim_set_hl(0, 'TelescopePreviewNormal', { bg = 'none' })
+        vim.api.nvim_set_hl(0, 'TelescopePreviewBorder', { bg = 'none' })
+
+        --LSP
+        vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
       end
 
       ColorPencils()
@@ -916,5 +935,8 @@ require('lazy').setup({
   },
 })
 
+vim.keymap.set('n', 'K', function()
+  vim.lsp.buf.hover { border = 'rounded' }
+end)
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
