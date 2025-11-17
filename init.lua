@@ -26,6 +26,10 @@ vim.o.guicursor = ''
 
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv") -- move the selected lines up/down
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+vim.keymap.set('v', '<Tab>', '>gv')
+vim.keymap.set('v', '<S-Tab>', '<gv')
+vim.keymap.set('v', '>', '>gv')
+vim.keymap.set('v', '<', '<gv')
 
 -- Replace word under cursor in the whole file
 vim.keymap.set('n', '<leader>r', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>]], { desc = 'Substitute word under cursor' })
@@ -219,6 +223,24 @@ require('lazy').setup({
       vim.keymap.set('n', '<C-l>', function()
         require('harpoon.ui').nav_file(4)
       end)
+    end,
+  },
+  {
+    'github/copilot.vim',
+    config = function()
+      -- Optional: enable copilot for certain filetypes only
+      vim.g.copilot_filetypes = {
+        markdown = true,
+        lua = true,
+        javascript = true,
+        typescript = true,
+        python = true,
+        ['*'] = true,
+      }
+
+      -- Optional: use <M-]> to accept the suggestion
+      vim.api.nvim_set_keymap('i', '<Tab>', 'copilot#Accept("<CR>")', { silent = true, expr = true })
+      vim.g.copilot_no_tab_map = true
     end,
   },
 
