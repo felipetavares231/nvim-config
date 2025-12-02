@@ -24,6 +24,12 @@ vim.o.termguicolors = true
 
 vim.o.guicursor = ''
 
+vim.keymap.set('n', '<C-s>', ':w<CR>')
+vim.keymap.set('n', '<C-p>', ':Ex<CR>')
+vim.keymap.set('n', '<leader>gc', ':Git checkout -b ')
+vim.keymap.set('n', '<leader>gf', ':Git fetch --all<CR>')
+vim.keymap.set('n', '<leader>gp', ':Git pull<CR>')
+
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv") -- move the selected lines up/down
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 vim.keymap.set('v', '<Tab>', '>gv')
@@ -149,6 +155,19 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.hl.on_yank()
   end,
 })
+--vim.api.nvim_create_autocmd('BufWritePre', {
+--  group = vim.api.nvim_create_augroup('LspRemoveUnusedImports', { clear = true }),
+--  pattern = { '*.ts', '*.tsx', '*.js', '*.jsx' }, -- Adjust for your language/file types
+--  callback = function()
+--    vim.lsp.buf.code_action {
+--      apply = true,
+--      context = {
+--        only = { 'source.removeUnused' }, -- Specific code action kind for removing unused imports
+--        diagnostics = {}, -- Include diagnostics if needed for other code actions
+--      },
+--    }
+--  end,
+--})
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -789,19 +808,19 @@ require('lazy').setup({
   },
 
   {
-    'vague2k/vague.nvim',
-    name = 'vague',
+    'rebelot/kanagawa.nvim',
+    name = 'kanagawa',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('vague').setup {
+      require('kanagawa').setup {
         disable_background = true, -- 🌿 makes background transparent
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
       }
 
-      vim.cmd.colorscheme 'vague'
+      vim.cmd.colorscheme 'kanagawa-dragon'
 
       -- Extra function to make sure floats and other UI parts are transparent
       local function ColorPencils()
