@@ -26,9 +26,6 @@ vim.o.guicursor = ''
 
 vim.keymap.set('n', '<C-s>', ':w<CR>')
 vim.keymap.set('n', '<C-p>', ':Ex<CR>')
-vim.keymap.set('n', '<leader>gc', ':Git checkout -b ')
-vim.keymap.set('n', '<leader>gf', ':Git fetch --all<CR>')
-vim.keymap.set('n', '<leader>gp', ':Git pull<CR>')
 
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv") -- move the selected lines up/down
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
@@ -245,29 +242,23 @@ require('lazy').setup({
     end,
   },
   {
-    'github/copilot.vim',
-    config = function()
-      -- Optional: enable copilot for certain filetypes only
-      vim.g.copilot_filetypes = {
-        markdown = true,
-        lua = true,
-        javascript = true,
-        typescript = true,
-        python = true,
-        ['*'] = true,
-      }
+    'NeogitOrg/neogit',
+    lazy = true,
+    dependencies = {
+      'nvim-lua/plenary.nvim', -- required
+      'sindrets/diffview.nvim', -- optional - Diff integration
 
-      -- Optional: use <M-]> to accept the suggestion
-      vim.api.nvim_set_keymap('i', '<Tab>', 'copilot#Accept("<CR>")', { silent = true, expr = true })
-      vim.g.copilot_no_tab_map = true
-    end,
+      -- Only one of these is needed.
+      'nvim-telescope/telescope.nvim', -- optional
+      'ibhagwan/fzf-lua', -- optional
+      'nvim-mini/mini.pick', -- optional
+      'folke/snacks.nvim', -- optional
+    },
+    cmd = 'Neogit',
+    keys = {
+      { '<leader>gg', '<cmd>Neogit<cr>', desc = 'Show Neogit UI' },
+    },
   },
-
-  {
-    'tpope/vim-fugitive',
-    event = 'VeryLazy',
-  },
-
   {
     'mbbill/undotree',
     keys = {
