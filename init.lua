@@ -799,41 +799,41 @@ require('lazy').setup({
   },
 
   {
-    'rebelot/kanagawa.nvim',
-    name = 'kanagawa',
+    'vague-theme/vague.nvim',
+    name = 'vague',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('kanagawa').setup {
+      require('vague').setup {
         disable_background = true, -- 🌿 makes background transparent
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
       }
 
-      vim.cmd.colorscheme 'kanagawa-dragon'
+      vim.cmd.colorscheme 'vague'
 
       -- Extra function to make sure floats and other UI parts are transparent
       local function ColorPencils()
         -- General UI
-        vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'none' })
 
-        -- Telescope
-        vim.api.nvim_set_hl(0, 'TelescopeNormal', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'TelescopeBorder', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'TelescopePromptNormal', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'TelescopePromptBorder', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'TelescopeResultsNormal', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'TelescopeResultsBorder', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'TelescopePreviewNormal', { bg = 'none' })
-        vim.api.nvim_set_hl(0, 'TelescopePreviewBorder', { bg = 'none' })
+        ---- Telescope
+        --vim.api.nvim_set_hl(0, 'TelescopeNormal', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'TelescopeBorder', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'TelescopePromptNormal', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'TelescopePromptBorder', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'TelescopeResultsNormal', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'TelescopeResultsBorder', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'TelescopePreviewNormal', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'TelescopePreviewBorder', { bg = 'none' })
 
         --LSP
-        vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
+        --vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
       end
 
       ColorPencils()
@@ -880,30 +880,24 @@ require('lazy').setup({
   --    --  Check out: https://github.com/echasnovski/mini.nvim
   --  end,
   --},
-  { -- Highlight, edit, and navigate code
+  {
     'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    build = ':TSUpdate', -- Command to update/install parsers
+    config = function()
+      require('nvim-treesitter.configs').setup {
+        -- List of languages to install; add any others you need
+        ensure_installed = { 'c', 'lua', 'vim', 'vimdoc', 'javascript', 'html', 'css' },
+        -- Install parsers synchronously (only used for first install)
+        sync_install = false,
+        -- Automatically install missing parsers
+        auto_install = true,
+        highlight = {
+          enable = true, -- Enable syntax highlighting
+          -- disable = { "latex" }, -- Disable for specific filetypes if needed
+        },
+        indent = { enable = true, disable = { 'latex' } }, -- Enable indentation
+      }
+    end,
   },
   { --for me to see in what function im in
     'nvim-treesitter/nvim-treesitter-context',
